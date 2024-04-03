@@ -13,10 +13,7 @@ import {ArticleService} from '../common/article.service';
 })
 export class ArticlesListComponent {
 
-  constructor(private articleService: ArticleService) {
-  }
-
-// Modèle de donnée d'un article et initialisation du modèle de donnée
+  // Modèle de donnée d'un article et initialisation du modèle de donnée
   article: Article = {
     id: '',
     name: '',
@@ -24,49 +21,31 @@ export class ArticlesListComponent {
     contact: '',
     stock: '',
   };
-// Liste des articles disponibles
+
   articles!: Article[];
 
+  constructor(private articleService: ArticleService) {
+  }
 
   ngOnInit() {
-    // Récupération des articles à partir du local storage
-    this.articles = this.getFromLocalStorage();
+    this.articles = this.articleService.getArticles();
   }
-
-//Création d'un nouvel article et ajout au tableau
-  createArticle(article: Article) {
-    // Ajout de l'article à la liste des articles
-    this.articles.push(article);
-    localStorage.setItem('articles', JSON.stringify(this.articles));
-
-    // Réinitialisation du modèle
-    this.article = {
-      id: '',
-      name: '',
-      price: '',
-      contact: '',
-      stock: '',
+  createArticle() {
+    const newArticle: Article = {
+      id: this.article.id,
+      name: this.article.name,
+      price: this.article.price,
+      contact: this.article.contact,
+      stock: this.article.stock
     };
+    this.articleService.addArticle(newArticle);
+    this.articles = this.articleService.getArticles();
+    // Réinitialisation des valeurs des champs de saisie
+    this.article = { id: '', name: '', price: '', contact: '', stock: '' };
   }
 
-// Suppression d'un article
   deleteArticle(article: Article) {
-    // Récupération de l'index de l'article à supprimer
-    const index = this.articles.findIndex((x) => x.id === article.id);
-    // Suppression de l'article du tableau
-    this.articles.splice(index, 1);
-    localStorage.setItem('articles', JSON.stringify(this.articles));
-  }
-
-  /**
-   * Récupération du tableau d'articles stocké dans le local storage
-   */
-  getFromLocalStorage(): Article[] {
-    // Récupération des articles en format 'string'
-    const stringData = localStorage.getItem('articles');
-    // Conversion des données de type 'string' en objet Json
-    const articles: Article[] = JSON.parse(stringData || '[]');
-
-    return articles;
+    this.articleService.deleteArticle(article);
+    this.articles = this.articleService.getArticles(); // Mettre à jour la liste des articles après suppression
   }
 }

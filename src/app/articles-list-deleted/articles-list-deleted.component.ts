@@ -1,6 +1,7 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { Article } from '../common/article';
+import {CommonModule} from '@angular/common';
+import {Component} from '@angular/core';
+import {Article} from '../common/article';
+import {ArticleService} from '../common/article.service';
 
 @Component({
   selector: 'app-articles-list-deleted',
@@ -10,17 +11,17 @@ import { Article } from '../common/article';
   styleUrl: './articles-list-deleted.component.css'
 })
 export class ArticlesListDeletedComponent {
-  // Liste des articles non disponnible
   articlesDeleted!: Article[];
 
-  ngOnInit() {
-    // TODO récupération des articles non disponible à partir d'un service
+  constructor(private articleService: ArticleService) {
   }
 
-  /**
-   * Restaure un article supprimé
-   */
-  restore() {
-    // TODO restauration de l'article à partir d'un service
+  ngOnInit() {
+    this.articlesDeleted = this.articleService.getDeletedArticles();
+  }
+
+  restore(article: Article) {
+    this.articleService.restoreArticle(article);
+    this.articlesDeleted = this.articleService.getDeletedArticles();
   }
 }
