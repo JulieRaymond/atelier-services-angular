@@ -13,7 +13,6 @@ import {ArticleService} from '../common/article.service';
 })
 export class ArticlesListComponent {
 
-  // Modèle de donnée d'un article et initialisation du modèle de donnée
   article: Article = {
     id: '',
     name: '',
